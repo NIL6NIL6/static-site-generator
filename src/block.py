@@ -10,6 +10,7 @@ class BlockType(Enum):
     UNORDERED_LIST = 5
     ORDERED_LIST = 6
 
+
 def block_to_block_type(block: str) -> BlockType:
     if re.match(r"^#{1,6} ", block):
         return BlockType.HEADING

@@ -10,7 +10,10 @@ from src.textnode import text_node_to_html_node
 
 def text_to_children(text: str) -> list[HTMLNode]:
     text = text.replace("\n", " ")
-    return [text_node_to_html_node(text_node) for text_node in text_to_textnodes(text)]
+    return [
+        text_node_to_html_node(text_node)
+        for text_node in text_to_textnodes(text)
+    ]
 
 
 def paragraph_to_html_node(paragraph: str) -> HTMLNode:
@@ -47,7 +50,9 @@ def ordered_list_to_html_node(ordered_list: str) -> HTMLNode:
         [
             ParentNode(
                 "li",
-                text_to_children(re.match(r"\d+\.\s+(.*)", list_item).group(1).strip()),
+                text_to_children(
+                    re.match(r"\d+\.\s+(.*)", list_item).group(1).strip()
+                ),
                 None,
             )
             for list_item in ordered_list.split("\n")

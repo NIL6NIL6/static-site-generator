@@ -16,7 +16,9 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(repr(node), node_str)
 
     def test_repr_link(self):
-        node = TextNode("This is a link node", TextType.LINK, "https://example.com")
+        node = TextNode(
+            "This is a link node", TextType.LINK, "https://example.com"
+        )
         node_str = "TextNode(This is a link node, link, https://example.com)"
         self.assertEqual(repr(node), node_str)
 
@@ -31,14 +33,21 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
     def test_diff_link(self):
-        node = TextNode("This is a link node", TextType.LINK, "https://example.com")
-        node2 = TextNode("This is a link node", TextType.LINK, "https://different.com")
+        node = TextNode(
+            "This is a link node", TextType.LINK, "https://example.com"
+        )
+        node2 = TextNode(
+            "This is a link node", TextType.LINK, "https://different.com"
+        )
         self.assertNotEqual(node, node2)
 
     def test_diff_none_link(self):
-        node = TextNode("This is a link node", TextType.LINK, "https://example.com")
+        node = TextNode(
+            "This is a link node", TextType.LINK, "https://example.com"
+        )
         node2 = TextNode("This is a link node", TextType.LINK, None)
         self.assertNotEqual(node, node2)
+
 
 class TestTextNodeToLeafNode(unittest.TestCase):
     def test_plain(self):
@@ -62,14 +71,35 @@ class TestTextNodeToLeafNode(unittest.TestCase):
         self.assertEqual(leaf, LeafNode("code", "This is a text node"))
 
     def test_link(self):
-        node = TextNode("This is a link node", TextType.LINK, "https://example.com")
+        node = TextNode(
+            "This is a link node", TextType.LINK, "https://example.com"
+        )
         leaf = text_node_to_html_node(node)
-        self.assertEqual(leaf, LeafNode("a", "This is a link node", {"href": "https://example.com"}))
+        self.assertEqual(
+            leaf,
+            LeafNode(
+                "a", "This is a link node", {"href": "https://example.com"}
+            ),
+        )
 
     def test_image(self):
-        node = TextNode("This is an image node", TextType.IMAGE, "https://example.com/image.png")
+        node = TextNode(
+            "This is an image node",
+            TextType.IMAGE,
+            "https://example.com/image.png",
+        )
         leaf = text_node_to_html_node(node)
-        self.assertEqual(leaf, LeafNode("img", None, {"src": "https://example.com/image.png", "alt": "This is an image node"}))
+        self.assertEqual(
+            leaf,
+            LeafNode(
+                "img",
+                None,
+                {
+                    "src": "https://example.com/image.png",
+                    "alt": "This is an image node",
+                },
+            ),
+        )
 
 
 if __name__ == "__main__":

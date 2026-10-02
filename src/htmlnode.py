@@ -1,5 +1,11 @@
 class HTMLNode:
-    def __init__(self, tag: str | None = None, value: str | None = None, children: list["HTMLNode"] | None = None, props: dict[str, str] | None = None):
+    def __init__(
+        self,
+        tag: str | None = None,
+        value: str | None = None,
+        children: list["HTMLNode"] | None = None,
+        props: dict[str, str] | None = None,
+    ):
         self.tag = tag
         self.value = value
         self.children = children if children is not None else []
@@ -11,9 +17,12 @@ class HTMLNode:
     def props_to_html(self) -> str:
         if not self.props or len(self.props) == 0:
             return ""
-        return " " + " ".join(
-            f'{key}="{value}"' for key, value in self.props.items()
-        ).strip()
+        return (
+            " "
+            + " ".join(
+                f'{key}="{value}"' for key, value in self.props.items()
+            ).strip()
+        )
 
     def __eq__(self, other: "HTMLNode") -> bool:
         return (
