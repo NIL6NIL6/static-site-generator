@@ -4,6 +4,8 @@ from markdown import (
     extract_markdown_images,
     extract_markdown_links,
     split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
 )
 from textnode import TextNode, TextType
 
@@ -52,6 +54,69 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         ]
         self.assertEqual(result, expected)
 
+class TestSplitNodesImage(unittest.TestCase):
+    def test_split_image(self):
+        nodes = [TextNode("This is an image ![alt text](image.jpg) in text", TextType.PLAIN, None)]
+        result = split_nodes_image(nodes)
+        expected = [
+            TextNode("This is an image ", TextType.PLAIN, None),
+            TextNode("alt text", TextType.IMAGE, "image.jpg"),
+            TextNode(" in text", TextType.PLAIN, None),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_split_image_last(self):
+        nodes = [TextNode("This is an image at the end ![alt text](image.jpg)", TextType.PLAIN, None)]
+        result = split_nodes_image(nodes)
+        expected = [
+            TextNode("This is an image at the end ", TextType.PLAIN, None),
+            TextNode("alt text", TextType.IMAGE, "image.jpg"),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_split_images(self):
+        nodes = [TextNode("This is an image ![alt text](image.jpg) and another ![another image](another.jpg) in text", TextType.PLAIN, None)]
+        result = split_nodes_image(nodes)
+        expected = [
+            TextNode("This is an image ", TextType.PLAIN, None),
+            TextNode("alt text", TextType.IMAGE, "image.jpg"),
+            TextNode(" and another ", TextType.PLAIN, None),
+            TextNode("another image", TextType.IMAGE, "another.jpg"),
+            TextNode(" in text", TextType.PLAIN, None),
+        ]
+        self.assertEqual(result, expected)
+
+class TestSplitNodesLink(unittest.TestCase):
+    def test_split_link(self):
+        nodes = [TextNode("This is a link [link text](link.html) in text", TextType.PLAIN, None)]
+        result = split_nodes_link(nodes)
+        expected = [
+            TextNode("This is a link ", TextType.PLAIN, None),
+            TextNode("link text", TextType.LINK, "link.html"),
+            TextNode(" in text", TextType.PLAIN, None),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_split_link_last(self):
+        nodes = [TextNode("This is a link at the end [link text](link.html)", TextType.PLAIN, None)]
+        result = split_nodes_link(nodes)
+        expected = [
+            TextNode("This is a link at the end ", TextType.PLAIN, None),
+            TextNode("link text", TextType.LINK, "link.html"),
+        ]
+        self.assertEqual(result, expected)
+
+    def test_split_links(self):
+        nodes = [TextNode("This is a link [link text](link.html) and another [another link](another.html) in text", TextType.PLAIN, None)]
+        result = split_nodes_link(nodes)
+        expected = [
+            TextNode("This is a link ", TextType.PLAIN, None),
+            TextNode("link text", TextType.LINK, "link.html"),
+            TextNode(" and another ", TextType.PLAIN, None),
+            TextNode("another link", TextType.LINK, "another.html"),
+            TextNode(" in text", TextType.PLAIN, None),
+        ]
+        self.assertEqual(result, expected)
 
 class TestExtractMarkdownImages(unittest.TestCase):
     def test_extract_markdown_images(self):
