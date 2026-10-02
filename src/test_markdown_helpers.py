@@ -1,6 +1,6 @@
 import unittest
 
-from markdown import (
+from src.markdown_helpers import (
     extract_markdown_images,
     extract_markdown_links,
     markdown_to_blocks,
@@ -9,7 +9,7 @@ from markdown import (
     split_nodes_link,
     text_to_textnodes,
 )
-from textnode import TextNode, TextType
+from src.textnode import TextNode, TextType
 
 
 class TestMarkdownToBlocks(unittest.TestCase):

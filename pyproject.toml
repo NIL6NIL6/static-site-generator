@@ -1,0 +1,26 @@
+[project]
+name = "static-site-generator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.10",
+]
+
+# uv run ruff format .
+[tool.ruff]
+exclude=[
+    ".git",
+    ".junit",
+    ".ruff_cache",
+    ".venv",
+    "build",
+    "dist",
+]
+line-length=79
+
+# uv run ty check .
