@@ -3,6 +3,20 @@ import re
 from textnode import TextNode, TextType
 
 
+def extract_markdown_images(text: str) -> list[tuple[str, str]]:
+    pattern = r"\!\[(.*?)\]\((.*?)\)"
+    matches: list[tuple[str, str]] = []
+    for match in re.findall(pattern, text):
+        matches.append((str(match[0]), str(match[1])))
+    return matches
+
+def extract_markdown_links(text: str) -> list[tuple[str, str]]:
+    pattern = r"(?<!\!)\[(.*?)\]\((.*?)\)"
+    matches: list[tuple[str, str]] = []
+    for match in re.findall(pattern, text):
+        matches.append((str(match[0]), str(match[1])))
+    return matches
+
 def split_nodes_delimiter(
     old_nodes: list[TextNode], delimiter: str, text_type: TextType
 ) -> list[TextNode]:
@@ -95,18 +109,3 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
                 )
             )
     return new_nodes
-
-def extract_markdown_images(text: str) -> list[tuple[str, str]]:
-    pattern = r"\!\[(.*?)\]\((.*?)\)"
-    matches: list[tuple[str, str]] = []
-    for match in re.findall(pattern, text):
-        matches.append((str(match[0]), str(match[1])))
-    return matches
-
-def extract_markdown_links(text: str) -> list[tuple[str, str]]:
-    pattern = r"(?<!\!)\[(.*?)\]\((.*?)\)"
-    matches: list[tuple[str, str]] = []
-    for match in re.findall(pattern, text):
-        matches.append((str(match[0]), str(match[1])))
-    return matches
-
