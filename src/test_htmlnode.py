@@ -52,6 +52,10 @@ class TestHTMLNode(unittest.TestCase):
         node2 = HTMLNode("tag", "value", props=props2)
         self.assertNotEqual(node1, node2)
 
+    def test_no_props_to_html(self):
+        node = HTMLNode("tag", "value")
+        self.assertEqual(node.props_to_html(), "")
+
     def test_prop_to_html(self):
         props = {"key": "value"}
         props_html = ' key="value"'
