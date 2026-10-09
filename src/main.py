@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 from src.markdown_helpers import extract_title
 from src.md_to_html import markdown_to_html_node
@@ -25,7 +26,7 @@ def copy_dir(src: str, dest: str) -> None:
             shutil.copy(s, d)
 
 
-def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
+def generate_page(from_path: str, template_path: str, dest_path: str, basepath: str) -> None:
     print(
         f"Generating page from {from_path} to {dest_path} using {template_path}"
     )
@@ -39,32 +40,36 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
 
     page_contents = template_contents.replace("{{ Title }}", title)
     page_contents = page_contents.replace("{{ Content }}", html_contents)
+    page_contents = page_contents.replace('href="/', f'href="{basepath}')
+    page_contents = page_contents.replace('src="/', f'src="{basepath}')
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w") as f:
         f.write(page_contents)
 
 
-def generate_pages(from_path: str, template_path: str, dest_path: str) -> None:
+def generate_pages(from_path: str, template_path: str, dest_path: str, basepath: str) -> None:
     for item in os.listdir(from_path):
         s = os.path.join(from_path, item)
         if os.path.isfile(s) and s.endswith(".md"):
             d = os.path.join(dest_path, os.path.splitext(item)[0] + ".html")
-            generate_page(s, template_path, d)
+            generate_page(s, template_path, d, basepath)
         elif os.path.isdir(s):
             d = os.path.join(dest_path, item)
-            generate_pages(s, template_path, d)
+            generate_pages(s, template_path, d, basepath)
 
 
 def main():
-    project_dir = os.path.dirname(os.path.dirname(__file__))
-    static_dir = os.path.join(project_dir, "static")
-    public_dir = os.path.join(project_dir, "public")
-    copy_dir(static_dir, public_dir)
+    if len(sys.argv) < 2:
+        basepath = "/"
+    else:
+        basepath = sys.argv[1]
+    copy_dir("static", "docs")
     generate_pages(
-        from_path=os.path.join(project_dir, "content"),
-        template_path=os.path.join(project_dir, "template.html"),
-        dest_path=public_dir,
+        from_path="content",
+        template_path="template.html",
+        dest_path="docs",
+        basepath=basepath
     )
 
 
