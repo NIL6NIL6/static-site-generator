@@ -120,3 +120,11 @@ def markdown_to_blocks(markdown: str) -> list[str]:
         for block in markdown.split("\n\n")
         if len(stripped_block := block.strip()) > 0
     ]
+
+
+def extract_title(markdown: str) -> str:
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block.startswith("# "):
+            return block[2:].strip()
+    raise ValueError("No title found in the markdown.")

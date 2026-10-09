@@ -3,6 +3,7 @@ import unittest
 from src.markdown_helpers import (
     extract_markdown_images,
     extract_markdown_links,
+    extract_title,
     markdown_to_blocks,
     split_nodes_delimiter,
     split_nodes_image,
@@ -268,6 +269,24 @@ class TestExtractMarkdownLinks(unittest.TestCase):
             ("another link", "another.html"),
         ]
         self.assertEqual(result_links, expected_links)
+
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title(self):
+        markdown = "# Title\n\nSome content."
+        result = extract_title(markdown)
+        expected = "Title"
+        self.assertEqual(result, expected)
+
+    def test_extract_title2(self):
+        markdown = "## Another Title\n\nSome more content."
+        with self.assertRaises(ValueError):
+            extract_title(markdown)
+
+    def test_no_title(self):
+        markdown = "No title here."
+        with self.assertRaises(ValueError):
+            extract_title(markdown)
 
 
 if __name__ == "__main__":

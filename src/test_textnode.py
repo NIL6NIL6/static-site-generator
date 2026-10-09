@@ -93,10 +93,9 @@ class TestTextNodeToLeafNode(unittest.TestCase):
             leaf,
             LeafNode(
                 "img",
-                None,
+                "This is an image node",
                 {
                     "src": "https://example.com/image.png",
-                    "alt": "This is an image node",
                 },
             ),
         )
