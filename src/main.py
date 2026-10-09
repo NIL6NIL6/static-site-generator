@@ -3,7 +3,6 @@ import shutil
 
 from src.markdown_helpers import extract_title
 from src.md_to_html import markdown_to_html_node
-from src.textnode import TextNode, TextType
 
 
 def copy_dir(src: str, dest: str) -> None:
@@ -46,15 +45,26 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
         f.write(page_contents)
 
 
+def generate_pages(from_path: str, template_path: str, dest_path: str) -> None:
+    for item in os.listdir(from_path):
+        s = os.path.join(from_path, item)
+        if os.path.isfile(s) and s.endswith(".md"):
+            d = os.path.join(dest_path, os.path.splitext(item)[0] + ".html")
+            generate_page(s, template_path, d)
+        elif os.path.isdir(s):
+            d = os.path.join(dest_path, item)
+            generate_pages(s, template_path, d)
+
+
 def main():
     project_dir = os.path.dirname(os.path.dirname(__file__))
     static_dir = os.path.join(project_dir, "static")
     public_dir = os.path.join(project_dir, "public")
     copy_dir(static_dir, public_dir)
-    generate_page(
-        from_path=os.path.join(project_dir, "content", "index.md"),
+    generate_pages(
+        from_path=os.path.join(project_dir, "content"),
         template_path=os.path.join(project_dir, "template.html"),
-        dest_path=os.path.join(public_dir, "index.html"),
+        dest_path=public_dir,
     )
 
 
